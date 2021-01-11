@@ -33,14 +33,14 @@
     const scene = new Scene()
 
     // Assigning an Environment Map enables PBR lighting for niceer shiny surfaces.
-    if (!SystemDesc.isMobileDevice) {
-      const envMap = new EnvMap('envMap')
-      envMap
-        .getParameter('FilePath')
-        .setValue(`/assets/HDR_029_Sky_Cloudy_Ref.vlenv`)
-      envMap.getParameter('HeadLightMode').setValue(true)
-      scene.getSettings().getParameter('EnvMap').setValue(envMap)
-    }
+    // if (!SystemDesc.isMobileDevice) {
+    //   const envMap = new EnvMap('envMap')
+    //   envMap
+    //     .getParameter('FilePath')
+    //     .setValue(`/assets/HDR_029_Sky_Cloudy_Ref.vlenv`)
+    //   envMap.getParameter('HeadLightMode').setValue(true)
+    //   scene.getSettings().getParameter('EnvMap').setValue(envMap)
+    // }
 
     scene.setupGrid(10, 10)
     renderer.setScene(scene)
@@ -142,7 +142,17 @@
     /** CAD START */
     const { GLCADPass, CADAsset } = window.zeaCad
 
-    const url = '/assets/Fidget-Spinner-2.zcad'
+    let url = '/assets/Fidget-Spinner-2.zcad'
+    const params = new URLSearchParams(location.search)
+    if (params.has('file')) {
+      const file = params.get('file')
+      url = `https://storage.googleapis.com/visualive-tmp/SLB/${file}/${file}.zcad`
+
+      // ?file=P-AH002_RGH%20SKID_27_1_2016
+      // ?file=P-AH002_RS SKID_27_1_2016
+      // ?file=150418-MM_09-29-15C Full site plan2016
+    }
+
     renderer.addPass(new GLCADPass())
 
     const asset = new CADAsset()
@@ -173,10 +183,10 @@
   }
 </style>
 
-<zea-layout add-cells="AB" borders cell-a-size="250" show-resize-handles="A">
-  <div slot="A" class="h-full w-full">
+<zea-layout add-cells="AB" borders cell-a-size="2" show-resize-handles="A">
+  <!-- <div slot="A" class="h-full w-full">
     <Sidebar rootItems={treeViewItems} {appData} />
-  </div>
+  </div> -->
   <div slot="B" class="h-full w-full">
     <canvas id="renderer" bind:this={canvas} />
     <div class="relative">
